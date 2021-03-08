@@ -5,7 +5,11 @@ var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
- 
+
+//createServer = api임
+//외부에서 요청이 들어올 떄마다 함수를 호출하면서
+//함수의 첫 번째 파라미터로는 웹 브라우라우저로부터 들어온 요청에 대한 정보를 담고 있는 객체인 request를 인자로 주기로 약속
+//두 번쨰 파라미터 값으로는 사용자에게 전송하고 싶은 정보 (= 함수 안에 구현된) ex. 처리 성공 / 파일 찾기 / 에러 등의 정보 담음
 var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
@@ -29,7 +33,6 @@ var app = http.createServer(function(request,response){
           var filteredId = path.parse(queryData.id).base;
           fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
             var title = queryData.id;
-            //사용하는 변수가 소독이 되었는지 알 수 있음
             var sanitizedTitle = sanitizeHtml(title);
             var sanitizedDescription = sanitizeHtml(description, {
               allowedTags:['h1']
@@ -142,4 +145,6 @@ var app = http.createServer(function(request,response){
       response.end('Not found');
     }
 });
+
+//요청에 대해 응답할 수 있도록 http 서버를 구동시키는 api
 app.listen(3000);

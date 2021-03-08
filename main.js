@@ -1,3 +1,31 @@
+var express = require('express')
+var app = express()
+var port = 3000
+var fs = require('fs');
+var template = require('./lib/template.js');
+
+app.get('/', function(request, response){
+  fs.readdir('./data', function(error, filelist){
+    var title = 'Welcome';
+    var description = 'Hello, Node.js';
+    var list = template.list(filelist);
+    var html = template.html(title, list,
+      `<h2>${title}</h2>${description}`,
+      `<a href="/create">create</a>`
+    );
+    response.send(html);
+  });
+});
+
+app.get('/page', function(req, res){
+  return res.send('/page');
+});
+
+app.listen(port, function(){
+  console.log(`Example app listening at http://localhost:${port}`);
+});
+
+/* 
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
@@ -6,10 +34,6 @@ var template = require('./lib/template.js');
 var path = require('path');
 var sanitizeHtml = require('sanitize-html');
 
-//createServer = api임
-//외부에서 요청이 들어올 떄마다 함수를 호출하면서
-//함수의 첫 번째 파라미터로는 웹 브라우라우저로부터 들어온 요청에 대한 정보를 담고 있는 객체인 request를 인자로 주기로 약속
-//두 번쨰 파라미터 값으로는 사용자에게 전송하고 싶은 정보 (= 함수 안에 구현된) ex. 처리 성공 / 파일 찾기 / 에러 등의 정보 담음
 var app = http.createServer(function(request,response){
     var _url = request.url;
     var queryData = url.parse(_url, true).query;
@@ -146,5 +170,5 @@ var app = http.createServer(function(request,response){
     }
 });
 
-//요청에 대해 응답할 수 있도록 http 서버를 구동시키는 api
 app.listen(3000);
+*/

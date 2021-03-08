@@ -1,0 +1,25 @@
+{
+  "name": "web1_html_internet-master",
+  "version": "1.0.0",
+  "description": "[중요 내용 정리](https://www.notion.so/Node-js-e6531959ce4f4e428d0fdffe9c9ff25e)",
+  "main": "main.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chaticker/node-basic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chaticker/node-basic/issues"
+  },
+  "homepage": "https://github.com/chaticker/node-basic#readme",
+  "dependencies": {
+    "sanitize-html": "^2.3.2"
+  }
+}

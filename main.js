@@ -4,6 +4,7 @@ var url = require('url');
 var qs = require('querystring');
 var template = require('./lib/template.js');
 var path = require('path');
+var sanitizeHtml = require('sanitize-html');
  
 var app = http.createServer(function(request,response){
     var _url = request.url;
@@ -15,7 +16,7 @@ var app = http.createServer(function(request,response){
           var title = 'Welcome';
           var description = 'Hello, Node.js';
           var list = template.list(filelist);
-          var html = template.HTML(title, list,
+          var html = template.html(title, list,
             `<h2>${title}</h2>${description}`,
             `<a href="/create">create</a>`
           );
@@ -28,13 +29,18 @@ var app = http.createServer(function(request,response){
           var filteredId = path.parse(queryData.id).base;
           fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
             var title = queryData.id;
+            //사용하는 변수가 소독이 되었는지 알 수 있음
+            var sanitizedTitle = sanitizeHtml(title);
+            var sanitizedDescription = sanitizeHtml(description, {
+              allowedTags:['h1']
+            });
             var list = template.list(filelist);
-            var html = template.HTML(title, list,
-              `<h2>${title}</h2>${description}`,
+            var html = template.html(sanitizedTitle, list,
+              `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
               ` <a href="/create">create</a>
-                <a href="/update?id=${title}">update</a>
+                <a href="/update?id=${sanitizedTitle}">update</a>
                 <form action="delete_process" method="post">
-                  <input type="hidden" name="id" value="${title}">
+                  <input type="hidden" name="id" value="${sanitizedTitle}">
                   <input type="submit" value="delete">
                 </form>`
             );
@@ -47,7 +53,7 @@ var app = http.createServer(function(request,response){
       fs.readdir('./data', function(error, filelist){
         var title = 'WEB - create';
         var list = template.list(filelist);
-        var html = template.HTML(title, list, `
+        var html = template.html(title, list, `
           <form action="/create_process" method="post">
             <p><input type="text" name="title" placeholder="title"></p>
             <p>
@@ -81,7 +87,7 @@ var app = http.createServer(function(request,response){
         fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
           var title = queryData.id;
           var list = template.list(filelist);
-          var html = template.HTML(title, list,
+          var html = template.html(title, list,
             `
             <form action="/update_process" method="post">
               <input type="hidden" name="id" value="${title}">
